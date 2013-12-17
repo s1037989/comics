@@ -3,16 +3,19 @@
 use CGI;
 use Date::Manip;
 use Data::Dumper;
+use List::Util 'shuffle';
+use File::Basename;
 my $Q = new CGI;
+my $webroot = '/data/vhosts/stefan.cog-ent.com/comics/htdocs';
 my $today = UnixDate(ParseDate('now'), '%Y%m%d');
 my $date = $Q->path_info() || $today; $date =~ s@^/@@;
 my $prev = UnixDate(DateCalc($date, "- 1 day"), '%Y%m%d');
 my $first = '20030720';
+my $random = basename ((shuffle(grep { -d $_ } glob("$webroot/2*")))[0]);
 my $next = UnixDate(DateCalc($date, "+ 1 day"), '%Y%m%d');
 my ($y,$m,$d) = ($date =~ /^(\d{4})(\d{2})(\d{2})$/);
 my $datefull = UnixDate(ParseDate($date), '%A, %B %d, %Y');
 
-my $webroot = '/data/vhosts/stefan.cog-ent.com/comics/htdocs';
 my $comics = [
 	{
 		n => [qw/baby_blues babyblues/],
@@ -81,6 +84,7 @@ print "Comics Date: <a href=\"/index.cgi/$date?download=$date\">$datefull</a>, c
 print "$r/$t comics last updated $stat<br /><br />\n";
 my $menu = [
 	[$first => "First Day"],
+	[$random => "Random Day"],
 	[$prev => "Previous Day"],
 	[$next => "Next Day"],
 	[$today => "Today"],
