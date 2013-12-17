@@ -17,32 +17,32 @@ my $comics = [
 	{
 		n => [qw/baby_blues babyblues/],
 		name => "Baby Blues",
-		link => "",
+		link => "http://www.babyblues.com",
 	},
 	{
 		n => [qw/beetle_bailey beetlebailey/],
 		name => "Beetle Bailey",
-		link => "",
+		link => "http://beetlebailey.com/comics/december-$d-$y/",
 	},
 	{
 		n => [qw/zits/],
 		name => "Zits",
-		link => "",
+		link => "http://zitscomics.com/comics/december-$d-$y/",
 	},
 	{
 		n => [qw/dilbert/],
 		name => "Dilbert",
-		link => "",
+		link => "http://www.dilbert.com/$y-$m-$d",
 	},
 	{
 		n => [qw/fox_trot foxtrot ft/],
 		name => "Fox Trot",
-		link => "",
+		link => "http://www.gocomics.com/foxtrot/$y/$m/$d",
 	},
 	{
 		n => [qw/frazz/],
 		name => "Frazz",
-		link => "",
+		link => "http://www.gocomics.com/frazz/$y/$m/$d",
 	},
 	{
 		n => [qw/get_fuzzy getfuzzy gf/],
@@ -52,7 +52,7 @@ my $comics = [
 	{
 		n => [qw/pearls_before_swine pearlsbeforeswine pearls pbs/],
 		name => "Pearls Before Swine",
-		link => "",
+		link => "http://www.gocomics.com/pearls_before_swine/$y/$m/$d",
 	},
 ];
 
@@ -90,11 +90,11 @@ print "<br /><br />\n";
 print "<center>\n";
 foreach ( @comics ) {
 	if ( $_->{img} ) {
-		print "<a href=\"/$_->{link}\">" if $_->{link};
+		print "<a href=\"$_->{link}\">" if $_->{link};
 		print "<img src=\"$_->{img}\"><br /><br />\n";
 		print "</a>" if $_->{link};
 	} else {
-		print "<a href=\"/$_->{link}\">$_->{name}</a>" if $_->{link};
+		print "<a href=\"$_->{link}\">$_->{name}</a>" if $_->{link};
 		print "<br />\n";
 	}
 }
