@@ -7,6 +7,7 @@ my $Q = new CGI;
 my $today = UnixDate(ParseDate('now'), '%Y%m%d');
 my $date = $Q->path_info() || $today; $date =~ s@^/@@;
 my $prev = UnixDate(DateCalc($date, "- 1 day"), '%Y%m%d');
+my $first = '20030720';
 my $next = UnixDate(DateCalc($date, "+ 1 day"), '%Y%m%d');
 my ($y,$m,$d) = ($date =~ /^(\d{4})(\d{2})(\d{2})$/);
 my $datefull = UnixDate(ParseDate($date), '%A, %B %d, %Y');
@@ -78,7 +79,14 @@ foreach my $comic ( @$comics ) {
 	
 print "Comics Date: <a href=\"/index.cgi/$date?download=$date\">$datefull</a>, click to redownload for this date<br />\n";
 print "$r/$t comics last updated $stat<br /><br />\n";
-print "<a href=/index.cgi/$prev>Previous Day</a> | <a href=/index.cgi/$next>Next Day</a> | <a href=/>Today</a><br /><br />\n";
+my $menu = [
+	[$first => "First Day"],
+	[$prev => "Previous Day"],
+	[$next => "Next Day"],
+	[$today => "Today"],
+];
+print join " | ", map { "<a href=/index.cgi/$_->[0]>$_->[1]</a>"} grep { -d "$webroot/$_->[0]" } @$menu;
+print "<br /><br />\n";
 print "<center>\n";
 foreach ( @comics ) {
 	if ( $_->{img} ) {
@@ -91,4 +99,4 @@ foreach ( @comics ) {
 	}
 }
 print "</center>\n";
-print "<a href=/index.cgi/$prev>Previous Day</a> | <a href=/index.cgi/$next>Next Day</a> | <a href=/>Today</a><br /><br />\n";
+print join " | ", map { "<a href=/index.cgi/$_->[0]>$_->[1]</a>"} grep { -d "$webroot/$_->[0]" } @$menu;
