@@ -8,6 +8,7 @@
 [ -z "$1" ] && date='now' || date="$1"
 date="$(date -d $date +%Y%m%d)"
 prev="$(date -d $date-1day +%Y%m%d)"
+prevweek="$(date -d $date-7day +%Y%m%d)"
 echo -e "\n$(date -d $date '+%A, %B %d, %Y')"
 WEBROOT=/data/vhosts/stefan.cog-ent.com/comics/htdocs
 COMICDIR=$WEBROOT/$date
@@ -16,6 +17,8 @@ test -d $COMICDIR && find $COMICDIR -type f -name "*.gif" -size -5000c | xargs -
 test -d $COMICDIR && find $COMICDIR -empty | xargs -r rmdir
 # Remove comics that are the same as the previous day
 test -d $COMICDIR && md5sum $COMICDIR/* | sed "s/$date/$prev/" | md5sum -c - 2>/dev/null | grep OK$ | sed "s/$prev/$date/;s/: OK$//" | grep gif$ | xargs -r rm -f
+# Or the previous week
+test -d $COMICDIR && md5sum $COMICDIR/* | sed "s/$date/$prevweek/" | md5sum -c - 2>/dev/null | grep OK$ | sed "s/$prevweek/$date/;s/: OK$//" | grep gif$ | xargs -r rm -f
 mkdir -p $COMICDIR
 touch $COMICDIR
 agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/31.0.1650.63 Chrome/31.0.1650.63 Safari/537.36"
