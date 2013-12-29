@@ -40,4 +40,4 @@ referer=http://www.zitscomics.com
 test -s $COMICDIR/zits.gif || wget -nv -O $COMICDIR/zits.gif -U "$agent" --referer=$referer $(perl -Mojo -E 'say g("http://www.zitscomics.com/comics/'$(date -d $date +%B-%_d-%Y | sed 's/ //')'" => {Referer => "'$referer'", "User-Agent" => "'"$agent"'"})->dom->at("#comicpanel")->find("img")->attr("src")')
 #########
 
-chown -R www-data.www-data $WEBROOT
+chown -R www-data.www-data $COMICDIR
