@@ -12,13 +12,17 @@ prevweek="$(date -d $date-7day +%Y%m%d)"
 echo -e "\n$(date -d $date '+%A, %B %d, %Y')"
 WEBROOT=/data/vhosts/stefan.cog-ent.com/comics/htdocs
 COMICDIR=$WEBROOT/$date
+PREVDIR=$WEBROOT/$prev
+PREVWEEKDIR=$WEBROOT/$prevweek
 # Remove comics that are too small to be comics
 test -d $COMICDIR && find $COMICDIR -type f -name "*.gif" -size -5000c | xargs -r rm -f
 test -d $COMICDIR && find $COMICDIR -empty | xargs -r rmdir
 # Remove comics that are the same as the previous day
 test -d $COMICDIR && md5sum $COMICDIR/* | sed "s/$date/$prev/" | md5sum -c - 2>/dev/null | grep OK$ | sed "s/$prev/$date/;s/: OK$//" | grep gif$ | xargs -r rm -f
+test -d $COMICDIR && ls -1 $COMICDIR/* | while read i; do j=$PREVDIR/${i##*/}; is=$(stat -c %s $i); js=$(stat -c %s $j); [ $js -eq $is ] && rm -f $i; done
 # Or the previous week
 test -d $COMICDIR && md5sum $COMICDIR/* | sed "s/$date/$prevweek/" | md5sum -c - 2>/dev/null | grep OK$ | sed "s/$prevweek/$date/;s/: OK$//" | grep gif$ | xargs -r rm -f
+test -d $COMICDIR && ls -1 $COMICDIR/* | while read i; do j=$PREVWEEKDIR/${i##*/}; is=$(stat -c %s $i); js=$(stat -c %s $j); [ $js -eq $is ] && rm -f $i; done
 mkdir -p $COMICDIR
 touch $COMICDIR
 agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/31.0.1650.63 Chrome/31.0.1650.63 Safari/537.36"
