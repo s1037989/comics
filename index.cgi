@@ -53,9 +53,14 @@ my $comics = [
 		link => "http://www.gocomics.com/getfuzzy/$y/$m/$d",
 	},
 	{
-		n => [qw/pearls_before_swine pearlsbeforeswine pearls pbs/],
+		n => [qw/pearls_before_swine pearlsbeforeswine pbs/],
 		name => "Pearls Before Swine",
 		link => "http://www.gocomics.com/pearls_before_swine/$y/$m/$d",
+	},
+	{
+		n => [qw/xkcd/],
+		name => "XKCD",
+		link => "http://www.xkcd.com/",
 	},
 ];
 
@@ -69,15 +74,18 @@ my $t = scalar @$comics;
 
 my @comics;
 foreach my $comic ( @$comics ) {
-	my @img = grep { -f $_ && -s _ } map { glob("$webroot/$date/$_.*") } @{$comic->{n}};
+	my @img = grep { -f $_ && -s _ } map { glob("$webroot/$date/$_*") } @{$comic->{n}};
 	$r++ if $img[0];
-	$img[0] =~ s/^$webroot//;
-	push @comics, {
-		n => $comic->{n}->[0],
-		img => $img[0],
-		name => $comic->{name},
-		link => $comic->{link},
-	};
+	foreach ( @img ) {
+		s/^$webroot//;
+		my ($num) = (/_(\d+)\.\w+$/);
+		push @comics, {
+			n => $comic->{n}->[0],
+			img => $_,
+			name => $comic->{name},
+			link => $num ? $comic->{link}.$num : $comic->{link},
+		};
+	}
 }
 	
 print "Comics Date: <a href=\"/index.cgi/$date?download=$date\">$datefull</a>, click to redownload for this date<br />\n";

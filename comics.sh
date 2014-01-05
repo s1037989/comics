@@ -42,6 +42,7 @@ test -s $COMICDIR/get_fuzzy.gif || wget -nv -O $COMICDIR/get_fuzzy.gif $(perl -M
 test -s $COMICDIR/pearls_before_swine.gif || wget -nv -O $COMICDIR/pearls_before_swine.gif $(perl -Mojo -E 'say g("http://www.gocomics.com/pearlsbeforeswine/'$(date -d $date +%Y/%m/%d)'")->dom->at("p.feature_item")->next->find("img")->attr("src")')
 referer=http://www.zitscomics.com
 test -s $COMICDIR/zits.gif || wget -nv -O $COMICDIR/zits.gif -U "$agent" --referer=$referer $(perl -Mojo -E 'say g("http://www.zitscomics.com/comics/'$(date -d $date +%B-%_d-%Y | sed 's/ //')'" => {Referer => "'$referer'", "User-Agent" => "'"$agent"'"})->dom->at("#comicpanel")->find("img")->attr("src")')
+ls $COMICDIR/xkcd_*.gif >/dev/null 2>/dev/null || perl -Mojo -E 'my $j=g("http://xkcd.com/info.0.json")->json; printf "wget -nc -nv -O \"%4d%02d%02d/xkcd_%d.gif\" \"%s\"\n", $j->{year}, $j->{month}, $j->{day}, $j->{num}, $j->{img}' | sh
 #########
 
 chown -R www-data.www-data $COMICDIR
